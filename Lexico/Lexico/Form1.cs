@@ -16,5 +16,10 @@ namespace Lexico
         {
             InitializeComponent();
         }
+
+        private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
     }
 }
