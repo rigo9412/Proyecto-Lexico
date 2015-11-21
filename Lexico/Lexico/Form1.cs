@@ -15,7 +15,7 @@ namespace Lexico
 {
     public partial class Form1 : Form
     {
-        String Stringconnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\Rigoberto\\Documents\\AUTOMATAS.accdb;Persist Security Info=True";
+        String Stringconnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\Rigoberto\\Documents\\GitHub\\Proyecto-Lexico\\AUTOMATAS.accdb;Persist Security Info=True";
         public Form1()
         {
            
