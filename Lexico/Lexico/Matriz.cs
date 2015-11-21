@@ -45,7 +45,7 @@ namespace Automatas.Clases
         public string ValidadCaracter(int codAcsii)//METODO PARA VALIDAR EL ESTADO DEL CARACTER
         {
             columna =  codAcsii.ToString();
-            if (codAcsii == 32)//" " espacio fin de cadena
+            if (codAcsii == 3)//" " espacio fin de cadena
             {
                 columna = "FDC";
             }

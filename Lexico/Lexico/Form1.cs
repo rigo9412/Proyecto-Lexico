@@ -67,11 +67,11 @@ namespace Lexico
             byte[] array;
             string respuesta = "";
 
-            if (richTextBox1.Text.Trim()!="")
+            if (true)
             {
 
-                string cadena = richTextBox1.Text+" ";//HAY QUE BUSCAR COMO MANEJAR LOS SALTOS DE LINEA
-
+                string cadena = richTextBox1.Text + "\u0003";//HAY QUE BUSCAR COMO MANEJAR LOS SALTOS DE LINEA
+                cadena = cadena.Replace('\n', '\u0003');
 
                 for (int i = 0; i < cadena.Length; i++)
                 {
@@ -79,8 +79,8 @@ namespace Lexico
                     
                     array = Encoding.ASCII.GetBytes(cadena[i].ToString());//Se obtiene el codigo ACSII
                     codAcsii = int.Parse(array[0].ToString());
-                    if (codAcsii != 10)//salto de linea
-                    {
+                      // MessageBox.Show(codAcsii.ToString());
+                   
                         respuesta = MT.ConsultarEstado(MT.ValidadCaracter(codAcsii), MT.Estado);
                         if (respuesta != "OK")
                         {
@@ -88,20 +88,15 @@ namespace Lexico
                             {
                                 MT.ConsultarEstado(Conexion.columna, MT.Estado);
                                 // MessageBox.Show(MT.Estado);
-                                richTextBox2.Text = richTextBox2.Text + MT.Estado;
+                                richTextBox2.Text = richTextBox2.Text + MT.Estado +"\n";
                                 MT.Estado = "1";
                             }
                             else
                             {
-                                MessageBox.Show("Error");
+                                MessageBox.Show("Error " + MT.Estado +" "+codAcsii);
                                 break;
                             }
                         }
-                    }
-                    else
-                    {
-                        richTextBox2.Text = richTextBox2.Text + "\n";
-                    }
                    
                 }
                  
