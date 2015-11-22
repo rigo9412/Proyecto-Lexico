@@ -16,6 +16,8 @@ namespace Lexico
     public partial class Form1 : Form
     {
         String Stringconnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\Rigoberto\\Documents\\GitHub\\Proyecto-Lexico\\AUTOMATAS.accdb;Persist Security Info=True";
+        string cadenaPreparada = "";
+        bool banderaCadena = false;
         public Form1()
         {
            
@@ -69,9 +71,9 @@ namespace Lexico
             string respuesta = "";
 
           
-                string cadena = richTextBox1.Text + "\u0003";//HAY QUE BUSCAR COMO MANEJAR LOS SALTOS DE LINEA
-               // cadena = cadena.Replace(' ', '\u0003');
-                cadena=PreparaCadena(cadena);
+                string cadena = cadenaPreparada+ "\u0003";//HAY QUE BUSCAR COMO MANEJAR LOS SALTOS DE LINEA
+                cadena = cadena.Replace('\r', '\u0003');
+              //  cadena=PreparaCadena(cadena);
                 for (int i = 0; i < cadena.Length; i++)
                 {
                     //MessageBox.Show(MT.Estado);
@@ -79,7 +81,8 @@ namespace Lexico
                     array = Encoding.ASCII.GetBytes(cadena[i].ToString());//Se obtiene el codigo ACSII
                     codAcsii = int.Parse(array[0].ToString());
                       // MessageBox.Show(codAcsii.ToString());
-                   
+                    if (codAcsii != '\n')
+                    {
                         respuesta = MT.ConsultarEstado(MT.ValidadCaracter(codAcsii), MT.Estado);
                         if (respuesta != "OK")
                         {
@@ -87,15 +90,22 @@ namespace Lexico
                             {
                                 MT.ConsultarEstado(Conexion.columna, MT.Estado);
                                 // MessageBox.Show(MT.Estado);
-                                richTextBox2.Text = richTextBox2.Text + MT.Estado+" " ;
+                                richTextBox2.Text = richTextBox2.Text + MT.Estado + " ";
                                 MT.Estado = "1";
                             }
                             else
                             {
-                                MessageBox.Show("Error " + MT.Estado +" "+codAcsii);
+                                MessageBox.Show("Error " + MT.Estado + " " + codAcsii);
                                 break;
                             }
                         }
+                    }
+                    else
+                    {
+                        
+                            richTextBox2.Text = richTextBox2.Text + "\n";
+                        
+                    }
                    
                 }
                
@@ -103,31 +113,78 @@ namespace Lexico
             
         }
 
-        private string PreparaCadena(string cadena)
+        //private string PreparaCadena(string cadena)
+        //{
+        //    StringBuilder sb = new StringBuilder(cadena);
+        //    for (int i = 0; i < sb.Length; i++)
+        //    {
+        //        if (cadena[i]=='"')
+        //        {
+        //            for (int j = i; j < sb.Length; j++)
+        //            {
+        //                if (cadena[j] == '\"' && j > i)
+        //                {
+
+        //                    i = j;
+        //                    break;
+        //                }
+
+        //            }
+        //        }
+        //        else if (cadena[i]==' ')
+        //        {
+        //            sb.Replace(' ','\u0003',i,1);
+        //        }
+
+        //    }
+        //    return sb.ToString();
+        //}
+
+        private void richTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            StringBuilder sb = new StringBuilder(cadena);
-            for (int i = 0; i < sb.Length; i++)
+           // MessageBox.Show("2");
+            if (banderaCadena == true)
             {
-                if (cadena[i]=='"')
+                if (e.KeyChar == '"')
                 {
-                    for (int j = i; j < sb.Length; j++)
-                    {
-                        if (cadena[j] == '\"' && j > i)
-                        {
-
-                            i = j;
-                            break;
-                        }
-
-                    }
+                    banderaCadena = false;
+                    cadenaPreparada = cadenaPreparada + e.KeyChar.ToString();
                 }
-                else if (cadena[i]==' ')
+                else if (e.KeyChar == '\b' && cadenaPreparada.Length != 0)
                 {
-                    sb.Replace(' ','\u0003',i,1);
+                    cadenaPreparada = cadenaPreparada.Remove(richTextBox1.SelectionStart, 1);
                 }
-
+                else if (e.KeyChar != '\b')
+                {
+                    cadenaPreparada = cadenaPreparada + e.KeyChar.ToString();
+                }
             }
-            return sb.ToString();
+            else
+            {
+
+                if (e.KeyChar == '"')
+                {
+                    banderaCadena = true;
+                    cadenaPreparada = cadenaPreparada + e.KeyChar.ToString();
+                }
+                else if (e.KeyChar == ' ' && banderaCadena == false)
+                {
+                    cadenaPreparada = cadenaPreparada + "\u0003";
+                }
+                else if (e.KeyChar == '\n' && banderaCadena == false)
+                {
+                    cadenaPreparada = cadenaPreparada + "\u0003";
+                }
+                else if (e.KeyChar == '\b' && cadenaPreparada.Length!=0)
+                {
+                    cadenaPreparada = cadenaPreparada.Remove(richTextBox1.SelectionStart, 1);
+                }
+                else if (e.KeyChar != '\b')
+                {
+                    cadenaPreparada = cadenaPreparada + e.KeyChar.ToString();
+                }
+            }
+
         }  
 
    
