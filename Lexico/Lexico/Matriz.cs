@@ -49,12 +49,7 @@ namespace Automatas.Clases
             {
                 columna = "FDC";
             }
-            //else if (codAcsii == 10)//volver a empezar
-            //{
-            //   // DUDA columna = "CAT";
-            //    //estado = "1";
-            //    //Conexion.estado = "1";
-            //}
+            
 
             return columna;
         }
@@ -72,7 +67,7 @@ namespace Automatas.Clases
                     {
                         respuesta = "ERROR";
                     }
-                    else if (columna=="FDC" && respuesta=="OK")
+                    else  if (columna=="FDC" && respuesta=="OK")
                     {
                         respuesta = "ACEPTA";
                         Conexion.columna = "CAT";
@@ -84,8 +79,8 @@ namespace Automatas.Clases
                         estado = Conexion.estado;
                         this.estado = Conexion.estado;//Paso el estado al
                     }
-                    
-                    
+
+          
                    
                 }
                 return respuesta;

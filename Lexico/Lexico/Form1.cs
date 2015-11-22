@@ -59,6 +59,7 @@ namespace Lexico
                 } 
             }
         }
+   
 
         private void btnEjecutar_Click(object sender, EventArgs e)
         {
@@ -67,12 +68,10 @@ namespace Lexico
             byte[] array;
             string respuesta = "";
 
-            if (true)
-            {
-
+          
                 string cadena = richTextBox1.Text + "\u0003";//HAY QUE BUSCAR COMO MANEJAR LOS SALTOS DE LINEA
-                cadena = cadena.Replace('\n', '\u0003');
-
+               // cadena = cadena.Replace(' ', '\u0003');
+                cadena=PreparaCadena(cadena);
                 for (int i = 0; i < cadena.Length; i++)
                 {
                     //MessageBox.Show(MT.Estado);
@@ -88,7 +87,7 @@ namespace Lexico
                             {
                                 MT.ConsultarEstado(Conexion.columna, MT.Estado);
                                 // MessageBox.Show(MT.Estado);
-                                richTextBox2.Text = richTextBox2.Text + MT.Estado +"\n";
+                                richTextBox2.Text = richTextBox2.Text + MT.Estado+" " ;
                                 MT.Estado = "1";
                             }
                             else
@@ -99,14 +98,38 @@ namespace Lexico
                         }
                    
                 }
-                 
-            }
-            else
-            {
-                MessageBox.Show("Esta vacio el editor");
-            }
+               
+           
+            
         }
 
-       
+        private string PreparaCadena(string cadena)
+        {
+            StringBuilder sb = new StringBuilder(cadena);
+            for (int i = 0; i < sb.Length; i++)
+            {
+                if (cadena[i]=='"')
+                {
+                    for (int j = i; j < sb.Length; j++)
+                    {
+                        if (cadena[j] == '\"' && j > i)
+                        {
+
+                            i = j;
+                            break;
+                        }
+
+                    }
+                }
+                else if (cadena[i]==' ')
+                {
+                    sb.Replace(' ','\u0003',i,1);
+                }
+
+            }
+            return sb.ToString();
+        }  
+
+   
     }
 }
