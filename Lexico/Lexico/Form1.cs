@@ -93,51 +93,48 @@ namespace Lexico
             ContId = 0;
             listaIDs.Clear();
             ///Termina de inicializar valores
-            cadena2 = richTextBox1.Text+" ";
+            cadena2 = richTextBox1.Text+" "; //guardo una cadena sin modificar
             cadena = richTextBox1.Text + "\u0003";       
-            cadena = cadena.Replace(' ', '\u0003');
-            cadena = cadena.Replace('\n', '\u0003');
+            cadena = cadena.Replace(' ', '\u0003');//convierto los espacios en blanco en mi caracter FDC
+            cadena = cadena.Replace('\n', '\u0003');//convierto los saltos de linea en mi caracter FDC
             //  cadena=PreparaCadena(cadena);
             for (int i = 0; i < cadena.Length; i++)
             {
                 array = Encoding.ASCII.GetBytes(cadena[i].ToString());//Se obtiene el codigo ACSII
                 codAcsii = int.Parse(array[0].ToString());
                
-                if (codAcsii == '"' && contadorCadena == 0 && contadorCome==0)
+                if (codAcsii == '"' && contadorCadena == 0 && contadorCome==0)//si entra aqui es que puede ser una cadena 
                 {
-                   cadena= PreparaCadena(cadena, i);   
+                   cadena= PreparaCadena(cadena, i); //checa si la cadena tiene fin si es asi reemplaza los FDC previamente puestos por espacios en blanco
                 }
-                //else if (codAcsii == '"' && contadorCome <= 1 && contadorCadena==1)
-                //{
-                //    contadorCadena = 0;
-                //}
-                else if (codAcsii=='/' && contadorCadena == 0 && contadorCome ==0 )
+                else if (codAcsii=='/' && contadorCadena == 0 && contadorCome ==0 )//si entra aqui puede ser un comentario
                 {
                     contadorCome++;
 
                 }
-                else if (codAcsii=='*' && contadorCadena == 0 && contadorCome == 1)
+                else if (codAcsii=='*' && contadorCadena == 0 && contadorCome == 1)//si detecta un * puede ser un inicio de comentario
                 {
                     contadorCome++; 
                 }
 
-                if (contadorCome == 2)
+                if (contadorCome == 2)//si el contador es igual a dos detecto un inicio de comentario
                 {
-                    cadena=prepararComentario(cadena,i);
-                    contadorCome = 0;
+                    cadena=prepararComentario(cadena,i);//busca el fin de comentario para quitar los fin de cadena por espacio en blanco
+                    contadorCome = 0;//pongo el contador en 0
                 }
 
            
-                    respuesta = MT.ConsultarEstado(MT.ValidadCaracter(codAcsii), MT.Estado,dataGridView1);
+                    respuesta = MT.ConsultarEstado(MT.ValidadCaracter(codAcsii), MT.Estado,dataGridView1);//ejecunto el metodo de la clase matriz
 
-                    if (respuesta != "OK")
+                    if (respuesta != "OK")//si la respuesta es diferente de ok entra
+
                     {
-                        if (respuesta == "ACEPTA")
+                        if (respuesta == "ACEPTA")//si es acepta va por el token a la matriz
                         {
                             MT.ConsultarEstado(Conexion.columna, MT.Estado,dataGridView1);
                             // MessageBox.Show(MT.Estado);                           
                             DeterminarToken(MT.Estado, palabra,cadena2[i]);
-                            MT.Estado = "1";
+                            MT.Estado = "1";//me regreso al estado 1 y limpio todo
                             palabra = "";
                             contadorCome = 0;
                             contadorCadena = 0;
@@ -145,12 +142,12 @@ namespace Lexico
                         else
                         {
                             
-                            MessageBox.Show("Error en el estado:" + MT.Estado + " Caracter donde Inicio Error: " + Convert.ToChar(codAcsii) + "  Total de errores: " + ((cadena.Count()) - i));
+                            MessageBox.Show("Error en el estado:" + MT.Estado + " Caracter donde Inicio Error: " + Convert.ToChar(codAcsii) + "  Total de errores: " + ((cadena.Count()) - i));//muestra toda la informacion del error ocurrido
                             break;
                         }
                     }
                
-                    palabra = palabra + Convert.ToChar(codAcsii).ToString();
+                    palabra = palabra + Convert.ToChar(codAcsii).ToString();//sigue la secuencia hasta encontrar una respuesta diferente de OK
                 
             }
 
@@ -159,7 +156,7 @@ namespace Lexico
 
 
 
-        private void DeterminarToken(string token, string palabra,char salto)
+        private void DeterminarToken(string token, string palabra,char salto)//metodo para determinnar las categorias en la tabla de tokens
         {
             
             palabra =palabra.Replace('\u0003', ' ');
@@ -225,10 +222,10 @@ namespace Lexico
             //}
             else if (token == "ID")
             {
-                if (listaIDs.Count() > 0)
+                if (listaIDs.Count() > 0)//si la lista de ids es menor a cero entra aqui
                 {
 
-                    if (BuscarID(palabra) == "")
+                    if (BuscarID(palabra) == "") // si es igual a vacio es que no existe ese id por lo tanto se da de alta 
                     {
                         IDcontador++;
                         // richTextBox2.Text = richTextBox2.Text + "\t " + token +" "+IDcontador +" \t\tIDENTIFICADOR \t\t          " + palabra + "\n";
@@ -257,7 +254,7 @@ namespace Lexico
             }
         }
 
-        private string BuscarID(string id)
+        private string BuscarID(string id)//busca si el id leeido ya existia 
         {
 
             foreach (var item in listaIDs)
@@ -265,10 +262,10 @@ namespace Lexico
 
                 if (item.Substring(0, item.IndexOf(",")) == id)
                 {
-                    return item.Substring(item.IndexOf(",")+1);
+                    return item.Substring(item.IndexOf(",")+1);//regresa el id encotrado
                 }
             }
-            return "";
+            return "";//si no existe regresa una cadena vacia
         }
 
         private string PreparaCadena(string cadena, int posicion)

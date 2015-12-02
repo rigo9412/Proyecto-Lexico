@@ -24,8 +24,9 @@ namespace Automatas
         //    datos = new List<int>();
         //}
 
-        public static DataTable TraerTodosDatosDeBD()//Manda todos los datos de la tabla que esta sql server
+        public static DataTable TraerTodosDatosDeBD()//Manda todos los datos de la tabla que estan en  sql server a el datagrid
         {
+            //aqui esta la conexion a la base de datos
             query = String.Format("select * from [{0}]", nombreTabla);
             OleDbConnection conexion = new OleDbConnection(conexionString);
               dt = new DataTable();
@@ -46,7 +47,7 @@ namespace Automatas
             {
                 throw new Exception(ex.Message);
             }
-            return dt;
+            return dt;//regresa la tabla en un data table
             
         }
 
