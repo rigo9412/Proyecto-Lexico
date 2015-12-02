@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Automatas.Clases
 {
@@ -40,54 +41,71 @@ namespace Automatas.Clases
                 this.columna = value;
             }
         }
-    
+   
 
         public string ValidadCaracter(int codAcsii)//METODO PARA VALIDAR EL ESTADO DEL CARACTER
         {
             columna =  codAcsii.ToString();
-            if (codAcsii == 3)//" " espacio fin de cadena
-            {
-                columna = "FDC";
-            }
+            //if (codAcsii == 3)//" " espacio fin de cadena
+            //{
+            //    columna = "FDC";
+            //}
             
 
             return columna;
         }
 
-        public string ConsultarEstado(string columna,string estado)//metodo para ver un estado
+        public string ConsultarEstado(string columna,string estado, DataGridView x)//metodo para ver un estado
         {
-            string respuesta;
-
-            if (columna != "")
+            try
             {
-                respuesta = Conexion.TraerEstadoDeBD(columna, estado); //va a a la base de datos y trae un estado
-                if (respuesta == "OK")// si regresa un OK es no ocurrio Errores de conexion
+                string respuesta = "OK";
+                int rowIndex = -1;
+                if (columna != "")
                 {
-                    if (Conexion.estado=="ERROR")
-                    {
-                        respuesta = "ERROR";
-                    }
-                    else  if (columna=="FDC" && respuesta=="OK")
+                    // respuesta = Conexion.TraerEstadoDeBD(columna, estado); //va a a la base de datos y trae un estado
+
+                    //BUSCAR ESTADO
+                    DataGridViewRow row = x.Rows
+                        .Cast<DataGridViewRow>()
+                        .Where(r => r.Cells["ESTADO"].Value.ToString().Equals(estado))
+                        .First();
+
+                    rowIndex = row.Index;
+                    Conexion.estado = x.Rows[rowIndex].Cells[columna].Value.ToString();
+
+
+                    if (columna == "3" && Conexion.estado != "ERROR")
                     {
                         respuesta = "ACEPTA";
                         Conexion.columna = "CAT";
                         estado = Conexion.estado;
                         this.estado = Conexion.estado;//Paso el estado al
                     }
+                    else if (Conexion.estado == "ERROR")
+                    {
+                        respuesta = "ERROR";
+                    }
+
                     else
                     {
                         estado = Conexion.estado;
                         this.estado = Conexion.estado;//Paso el estado al
                     }
 
-          
-                   
+
+
+
+                    return respuesta;
                 }
-                return respuesta;
+                else//si entra aqui esque hay errores de conexion
+                {
+                    return respuesta = "Se encontro un caracter no valido en la cadena";
+                }
             }
-            else//si entra aqui esque hay errores de conexion
+            catch(Exception es)
             {
-                return respuesta="Se encontro un caracter no valido en la cadena";
+                return es.Message;
             }
             
         }
