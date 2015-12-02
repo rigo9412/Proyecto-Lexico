@@ -16,7 +16,9 @@ namespace Lexico
 {
     public partial class Form1 : Form
     {
+        //la direccion de la base de datos
         String Stringconnection = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\Rigoberto\\Documents\\GitHub\\Proyecto-Lexico\\AUTOMATAS.accdb;Persist Security Info=True";
+       //contadores que utilizo
         int click = 0;
         int IDcontador = 0;
         int contadorCadena = 0, contadorCome = 0;
@@ -48,9 +50,9 @@ namespace Lexico
                 saveFileDialog1.Filter = "TOKEN Files|*.token";
                 Conexion.conexionString = Stringconnection;
                 Conexion.nombreTabla = "Lexico";
-               
+               //prueba de fuego
                //richTextBox1.Text = "INICIO\nUBICAR ( 4 , 5 )\n\"HOLA MUNDO\"\n/*COMENTARIO GHG */\nFIN";
-                
+                //traego los datos a la datagrid
                 dataGridView1.DataSource = Conexion.TraerTodosDatosDeBD();
                 
              
@@ -275,12 +277,13 @@ namespace Lexico
             StringBuilder sb = new StringBuilder(cadena);
             for (int i = posicion; i < sb.Length; i++)
             {
-                if (cadena[i] == '"')
+                if (cadena[i] == '"')//detecta la primera comilla
                 {
                     for (int j = i; j < sb.Length; j++)
                     {
-                        if (cadena[j] == '\"' && j > i)
+                        if (cadena[j] == '\"' && j > i)//busca la seguna comilla
                         {
+                            //guardo todas las posiciones y detengo el ciclo
                             posInicial = i;
                             avance = j;
                             i = j;
@@ -292,7 +295,7 @@ namespace Lexico
 
                     if (bandera==true)
                     {
-                        sb.Replace('\u0003',' ', posInicial,avance-posInicial);
+                        sb.Replace('\u0003',' ', posInicial,avance-posInicial);//cambio el FDC por espacio en blanco
                         contadorCadena++;
                         bandera = false;
                         break;
@@ -304,7 +307,7 @@ namespace Lexico
             return sb.ToString();
         }
 
-        private string prepararComentario(string cadena, int posicion)
+        private string prepararComentario(string cadena, int posicion)//preparo el comentario
         {
             int posInicial = 0, avance = 0;
             bool bandera = false;
@@ -312,13 +315,14 @@ namespace Lexico
             for (int i = posicion; i < sb.Length; i++)
             {
                 char C = cadena[i];
-                if ( C== '*')
+                if ( C== '*')//hassta que encuentre un * entra aqui
                 {
-                    for (int j = i; j < sb.Length; j++)
+                    for (int j = i; j < sb.Length; j++)//busca la diagonal
                     {
                         char x = cadena[j];
-                        if (x == '/' && j > i)
+                        if (x == '/' && j > i)//si la encuentra 
                         {
+                            //guardo todas las coordenadas y detengo el ciclo
                             posInicial = i;
                             avance = j;
                             i = j;
@@ -330,7 +334,7 @@ namespace Lexico
 
                     if (bandera == true)
                     {
-                        sb.Replace('\u0003', ' ', posInicial, avance - posInicial);
+                        sb.Replace('\u0003', ' ', posInicial, avance - posInicial);//cambio el FDC por espacio en blanco
                         bandera = false;
                         
                         break;
@@ -388,7 +392,7 @@ namespace Lexico
           
         }
 
-    
+     //los metos de aqui para abajo son los metodos son para los archivos 
         private void abrirTokens_Click(object sender, EventArgs e)
         {
             Stream myStream;
